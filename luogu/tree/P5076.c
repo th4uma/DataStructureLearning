@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int q,op,ct,gen,x,ansq,ansh,anspm;
+int q,op,ct,gen,x,ansq,ansh,anspm,qq,hh;
 typedef struct node {
-    int l,r,f;
-    int data,pm;
+    int l,r,cnt,data,size;
 }node;
 node m[1000001];
 
@@ -12,52 +11,75 @@ int add(int sy,int x){
     if(sy==0){
         ct++;
         m[ct].data=x;
+        m[ct].size=m[ct].cnt=1;
         return ct; 
     }
-    if(x<m[sy].data){
+    if(x==m[sy].data){
+        m[sy].cnt++;
+    }else if(x<m[sy].data){
         m[sy].l=add(m[sy].l,x);
-        m[sy].pm++;
-    }
-    else if(x>m[sy].data) m[sy].r=add(m[sy].r,x);
+    }else m[sy].r=add(m[sy].r,x);
+    m[sy].size=m[m[sy].l].size+m[m[sy].r].size+m[sy].cnt;
     return sy;
 }
 
-void qh(int sy,int x){
-    if(sy==0) return;
-    if(m[sy].data==x){
-        ansq=m[m[sy].l].data;
-        if(ansq==2147483647) ansq*=-1;
-        ansh=m[m[sy].r].data;
-        anspm=m[sy].pm+1;
-        return;
+int qx(int sy,int x){
+    int ans=-2147483647;
+    while(sy!=0){
+        if(m[sy].data<x){
+            ans=m[sy].data;
+            sy=m[sy].r;
+        }else sy=m[sy].l;
     }
-    if(x<m[sy].data) qh(m[sy].l,x);
-    if(x>m[sy].data) qh(m[sy].r,x);
+    return ans;
+}
+int hx(int sy,int x){
+    int ans=2147483647;
+    while(sy!=0){
+        if(m[sy].data>x){
+            ans=m[sy].data;
+            sy=m[sy].l;
+        }else sy=m[sy].r;
+    }
+    return ans;
+}
+
+int xpm(int sy,int x){
+    if(sy==0) return 1;
+    if(x==m[sy].data) return m[m[sy].l].size+1;
+    if(x<m[sy].data){
+        return xpm(m[sy].l,x);
+    }else{
+        return xpm(m[sy].r,x)+m[m[sy].l].size+m[sy].cnt;
+    }
+}
+
+int pmx(int sy,int x){
+    if(sy==0) return 0;
+    if(x<=m[m[sy].l].size) return pmx(m[sy].l,x);
+    else if(x<=m[m[sy].l].size+m[sy].cnt) return m[sy].data;
+    else return pmx(m[sy].r,x-m[m[sy].l].size-m[sy].cnt);
 }
 
 int main(){
     scanf("%d",&q);
     for(int i=0;i<=q;i++){
-        m[i].l=m[i].r=m[i].f=0;
+        m[i].l=m[i].r=m[i].cnt=0;
         m[i].data=2147483647;
     }
     for(int i=1;i<q;i++){
         scanf("%d%d",&op,&x);
         if(op==1){
-            qh(gen,x);
+            anspm=xpm(gen,x);
             printf("%d\n",anspm);
         }else if(op==2){
-            for(int i=1;i<=ct;i++){
-                if(m[i].pm==x){
-                    printf("%d",m[i].data);
-                    break;
-                }
-            }
+            anspm=pmx(gen,x);
+            printf("%d\n",anspm);
         }else if(op==3){
-            qh(gen,x);
+            ansq=qx(gen,x);
             printf("%d\n",ansq);
         }else if(op==4){
-            qh(gen,x);
+            ansh=hx(gen,x);
             printf("%d\n",ansh);
         }else if(op==5){
             gen=add(gen,x);
