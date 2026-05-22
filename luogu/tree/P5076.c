@@ -67,7 +67,7 @@ int main(){
         m[i].l=m[i].r=m[i].cnt=0;
         m[i].data=2147483647;
     }
-    for(int i=1;i<q;i++){
+    for(int i=1;i<=q;i++){
         scanf("%d%d",&op,&x);
         if(op==1){
             anspm=xpm(gen,x);
