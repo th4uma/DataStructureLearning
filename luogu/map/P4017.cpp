@@ -5,32 +5,36 @@
 
 using namespace std;
 
-int n,m,a,b,aaa[1000001],maxx[100001],dp[100001];
-
-queue<int> q;   
-
-typedef struct node {
-    int rd,cd;
-}node;
-
-node rr[500001];
-
+int n,m,r[1000001],c[1000001],aaa[1000001],a,b,ans;
 vector<int> adj[100001];
-
 void map(int u,int v){
     adj[u].push_back(v);
-    rr[u].cd++;
-    rr[v].rd++;
+    c[u]++;
+    r[v]++;
 }
 
 void bfs(){
+    queue<int> q;
     for(int i=1;i<=n;i++){
-        if(rr[i].rd==0){
-            dp[i]=1;
+        if(r[i]==0){
             q.push(i);
+            aaa[i]=1;
         }
     }
-
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+        for(int v:adj[u]){
+            aaa[v]=(aaa[v]+aaa[u])%80112002;
+            r[v]--;
+            if(r[v]==0) q.push(v);
+        }
+    }
+    for(int i=1;i<=n;i++){
+        if(c[i]==0){
+            ans=(aaa[i]+ans)%80112002;
+        }
+    }
 }
 
 int main(){
@@ -40,7 +44,8 @@ int main(){
         scanf("%d%d",&a,&b);
         map(a,b);
     }                        
-
+    bfs();
+    printf("%d\n",ans);
     
     printf("\n");
     return 0;
