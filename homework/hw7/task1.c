@@ -15,7 +15,7 @@ void cr(){
     }node;
     node *head=(node*)malloc(sizeof(node));
     head->next=NULL;
-    node *p=head;
+
     for(int i=1;i<=n;i++){
         node *nw=(node*)malloc(sizeof(node));
         nw->data=c[i];
@@ -54,10 +54,12 @@ void xz(){
                 sy=j;
             }
         }
-        int sw=c[i];
-        c[i]=c[sy];
-        c[sy]=sw;
-        xzpx.recnt++;
+        if(sy!=i){
+            int sw=c[i];
+            c[i]=c[sy];
+            c[sy]=sw;
+            xzpx.recnt++;
+        }
     }
     
     printf("选择排序结果：");
@@ -88,7 +90,7 @@ void mp(){
 
     printf("冒泡排序结果：");
     for(int i=1;i<=n;i++){
-        printf("%d ",c[i]);
+        printf("%d ",b[i]);
     }
     printf("\n");
     printf("比较次数：");
