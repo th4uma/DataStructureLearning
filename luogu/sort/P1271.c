@@ -13,12 +13,8 @@ int main(){
         cnt[x]++;
     }
     for(int i=1;i<=n;i++){
-        if(cnt[i]==0){
-            i++;
-        }else{
-            for(int j=1;j<=cnt[i];j++){
-                printf("%d ",i);
-            }
+        for(int j=1;j<=cnt[i];j++){
+            printf("%d ",i);
         }
     }
     printf("\n");
