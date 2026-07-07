@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int n, cnt = 3,mxtime=0;
+// cnt是剩余车位数量
+int n, cnt = 3, mxtime = 0;
 char ad;
 int nm, t;
 
+// 存储车辆的结构体
 typedef struct car
 {
     struct car *next;
     int num, time;
+    // 在停车场内滞留时间
     int realtime;
 } car;
 
+// 新车辆到达
 void arrive(car **p, car **q)
 {
     car *carr = (car *)malloc(sizeof(car));
@@ -35,6 +39,8 @@ void arrive(car **p, car **q)
         carr->realtime = t;
     }
 }
+
+// 车辆离开停车场
 void leavepark(car *pre, car *ans, car *headbd, car **p, car **q)
 {
     pre->next = ans->next;
@@ -64,6 +70,8 @@ void leavepark(car *pre, car *ans, car *headbd, car **p, car **q)
         printf("车位剩余：%d\n", cnt);
     }
 }
+
+// 车辆离开便道
 void leavebd(car *headbd, car **q)
 {
     car *ans = headbd->next;
@@ -86,30 +94,41 @@ void leavebd(car *headbd, car **q)
         free(ans);
     }
 }
+
 int main()
 {
+    // 停车场链表头
     car *head = (car *)malloc(sizeof(car));
-    car *headbd = (car *)malloc(sizeof(car));
     car *p = head;
+    head->next = NULL;
+
+    // 便道链表头
+    car *headbd = (car *)malloc(sizeof(car));
     car *q = headbd;
     headbd->next = NULL;
-    head->next = NULL;
+
     scanf("%d", &n);
     for (int i = 1; i <= n; i++)
     {
         scanf(" %c", &ad);
         scanf("%d%d", &nm, &t);
-        if(t<mxtime){
+        // 检查时间是否有序
+        if (t < mxtime)
+        {
             printf("时间有误\n");
             return 0;
-        }else mxtime=t;
+        }
+        else
+            mxtime = t;
         if (ad == 'A')
         {
             arrive(&p, &q);
         }
         else if (ad == 'D')
         {
+            // 查找车辆
             car *ans = head->next;
+            // 前一个节点
             car *pre = head;
             while (ans != NULL && ans->num != nm)
             {
@@ -118,6 +137,7 @@ int main()
             }
             if (ans == NULL)
             {
+                // 停车场没找到目标
                 leavebd(headbd, &q);
             }
             else

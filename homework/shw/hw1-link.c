@@ -3,16 +3,20 @@
 
 int m, n;
 
+// 存储节点的结构体
 typedef struct node
 {
     struct node *next;
     int data;
 } node;
+
+// 插入排序函数
 void cr(node *head, int a)
 {
     node *nw = (node *)malloc(sizeof(node));
     nw->data = a;
     node *p = head;
+    // 找到合适的位置
     while (p->next != NULL && p->next->data < nw->data)
     {
         p = p->next;

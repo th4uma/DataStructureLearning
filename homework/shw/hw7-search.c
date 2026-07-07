@@ -10,6 +10,7 @@ typedef struct ip
 } ip;
 ip data[100000];
 
+// 传给快排函数的判断逻辑，递增
 int qcmp(const void *x, const void *y)
 {
     ip *h = (ip *)x;
@@ -21,22 +22,37 @@ int qcmp(const void *x, const void *y)
     return 0;
 }
 
-void search2(int head,int tail,long long val,ip data[100000])
+// 二分搜索
+void search2(int head, int tail, long long val, ip data[100000])
 {
-    if(head>=tail){
-        if(tail==n){
-            printf("%s\n",data[tail].place);
-        }else printf("未找到\n");
+    if (head >= tail)
+    {
+        // 处理比最大ip还大的值
+        if (tail == n)
+        {
+            printf("%s\n", data[tail].place);
+        }
+        else
+            printf("未找到\n");
         return;
     }
-    int x=(head+tail)/2;
-    if(data[x].val<=val&&data[x+1].val>val){
-        printf("%s\n",data[x].place);
+    // x在序列中间
+    int x = (head + tail) / 2;
+    // 找到
+    if (data[x].val <= val && data[x + 1].val > val)
+    {
+        printf("%s\n", data[x].place);
         return;
-    }else if(data[x].val<val&&data[x+1].val<=val){
-        search2(x+1,tail,val,data);
-    }else if(data[x].val>val){
-        search2(head,x,val,data);
+        // 小了，去右子区间
+    }
+    else if (data[x].val < val && data[x + 1].val <= val)
+    {
+        search2(x + 1, tail, val, data);
+        // 大了，去左子区间
+    }
+    else if (data[x].val > val)
+    {
+        search2(head, x, val, data);
     }
 }
 
@@ -46,18 +62,19 @@ int main()
     for (int i = 1; i <= n; i++)
     {
         scanf("%d.%d.%d.%d", &a, &b, &c, &d);
+        // ip是256进制，longlong存储
         data[i].val = a * 256LL * 256 * 256 + b * 256LL * 256 + c * 256LL + d;
         scanf("%s", data[i].place);
     }
 
-    qsort(data+1, n, sizeof(data[0]), qcmp);
+    qsort(data + 1, n, sizeof(data[0]), qcmp);
 
     for (int i = 1; i <= m; i++)
     {
         scanf("%d.%d.%d.%d", &a, &b, &c, &d);
-        val=a * 256LL * 256 * 256 + b * 256LL * 256 + c * 256LL + d;
-        printf("IP地址 %d.%d.%d.%d 对应省市：",a,b,c,d);
-        search2(1,n,val,data);
+        val = a * 256LL * 256 * 256 + b * 256LL * 256 + c * 256LL + d;
+        printf("IP地址 %d.%d.%d.%d 对应省市：", a, b, c, d);
+        search2(1, n, val, data);
     }
     return 0;
 }
