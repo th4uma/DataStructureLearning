@@ -29,7 +29,7 @@ void qsortstu(student a[10000], int head, int tail)
             m++;
         while (a[n].score < x && n > head)
             n--;
-        if (a[m].score <= x && a[n].score >= x)
+        if (m<=n)
         {
             swap(m, n, a);
             m++;
@@ -37,8 +37,8 @@ void qsortstu(student a[10000], int head, int tail)
         }
     }
     // 递归
-    qsortstu(a, head, m - 1);
-    qsortstu(a, m + 1, tail);
+    qsortstu(a, head, n );
+    qsortstu(a, m , tail);
 }
 int main()
 {

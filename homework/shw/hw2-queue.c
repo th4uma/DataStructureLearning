@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// cnt是剩余车位数量
-int n, cnt = 3, mxtime = 0;
+// n是剩余车位数量,m是事件数量
+int n, m, mxtime = 0;
 char ad;
 int nm, t;
 
@@ -22,7 +22,7 @@ void arrive(car **p, car **q)
     carr->num = nm;
     carr->time = t;
     carr->next = NULL;
-    if (cnt <= 0)
+    if (n <= 0)
     {
         printf("车位已满\n");
         (*q)->next = carr;
@@ -31,11 +31,11 @@ void arrive(car **p, car **q)
     }
     else
     {
-        cnt--;
+        n--;
         (*p)->next = carr;
         (*p) = carr;
         printf("车牌号：%d 入场时间：%d\n", carr->num, carr->time);
-        printf("车位剩余：%d\n", cnt);
+        printf("车位剩余：%d\n", n);
         carr->realtime = t;
     }
 }
@@ -48,10 +48,11 @@ void leavepark(car *pre, car *ans, car *headbd, car **p, car **q)
     {
         (*p) = pre;
     }
-    cnt++;
+    n++;
     printf("车牌号：%d 出场时间：%d\n", ans->num, t);
+    printf("停车时间：%d\n", t - ans->realtime);
     printf("停车费用：%d\n", (t - ans->realtime) * 5);
-    printf("车位剩余：%d\n", cnt);
+    printf("车位剩余：%d\n", n);
     free(ans);
     if (headbd->next != NULL)
     {
@@ -61,13 +62,13 @@ void leavepark(car *pre, car *ans, car *headbd, car **p, car **q)
         (*p)->next = tmp;
         (*p) = tmp;
         (*p)->next = NULL;
-        cnt--;
+        n--;
         if (tmp == (*q))
         {
             (*q) = headbd;
         }
         printf("车牌号：%d 入场时间：%d\n", tmp->num, tmp->realtime);
-        printf("车位剩余：%d\n", cnt);
+        printf("车位剩余：%d\n", n);
     }
 }
 
@@ -107,8 +108,8 @@ int main()
     car *q = headbd;
     headbd->next = NULL;
 
-    scanf("%d", &n);
-    for (int i = 1; i <= n; i++)
+    scanf("%d%d", &n,&m);
+    for (int i = 1; i <= m; i++)
     {
         scanf(" %c", &ad);
         scanf("%d%d", &nm, &t);
