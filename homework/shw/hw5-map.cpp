@@ -58,6 +58,7 @@ int main()
     {
         scanf("%d%d", &a, &b);
         map(a, b, ljb);
+        map(b, a, ljb);
     }
     // 邻接矩阵建图
     for (int i = 1; i <= n; i++)
